@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUB-5:00 · Mile Block 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0a; color: #e5e5e5; font-family: 'Courier New', monospace; }
+  input { font-family: 'Courier New', monospace; }
+  button { font-family: 'Courier New', monospace; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #111; }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+  /* Setup screen */
+  .setup { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .setup-card { max-width: 480px; width: 100%; }
+  .setup-title { font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 4px; }
+  .setup-sub { font-size: 10px; color: #444; letter-spacing: 3px; margin-bottom: 32px; }
+  .setup-field { margin-bottom: 16px; }
+  .setup-label { font-size: 9px; color: #555; letter-spacing: 2px; margin-bottom: 6px; display: block; }
+  .setup-input {
+    width: 100%; background: #111; border: 1px solid #2a2a2a; border-radius: 4px;
+    color: #e5e5e5; font-size: 12px; padding: 10px 12px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .setup-input:focus { border-color: #4ade8066; }
+  .setup-input::placeholder { color: #333; }
+  .setup-btn {
+    width: 100%; padding: 12px; background: transparent;
+    border: 1px solid #4ade8055; border-radius: 4px; color: #4ade80;
+    font-size: 11px; letter-spacing: 3px; cursor: pointer; margin-top: 8px;
+    transition: all 0.2s;
+  }
+  .setup-btn:hover { background: #4ade8011; }
+  .setup-btn:disabled { opacity: 0.4; cursor: default; }
+  .setup-hint { font-size: 9px; color: #333; line-height: 1.7; margin-top: 24px; }
+  .setup-hint a { color: #555; }
+  .setup-error { font-size: 9px; color: #f87171; margin-top: 8px; letter-spacing: 1px; }
+
+  /* Saving indicator */
+  .save-badge {
+    font-size: 9px; letter-spacing: 2px; padding: 4px 8px;
+    border-radius: 3px; transition: all 0.3s;
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+// ── CONFIG ─────────────────────────────────────────────────────────────────
+const GIST_FILENAME = "mile-tracker-data.json";
+
+// ── PLAN DATA ──────────────────────────────────────────────────────────────
+const phases = [
+  { name: "BASE",          weeks: [1,2,3,4],    color: "#4ade80" },
+  { name: "THRESHOLD",     weeks: [5,6,7],       color: "#fb923c" },
+  { name: "MILE-SPECIFIC", weeks: [8,9,10,11],   color: "#f87171" },
+  { name: "TAPER",         weeks: [12,13],        color: "#c084fc" },
+];
+
+const weekData = [
+  { week:1,  miles:16, dates:"Apr 1–7",      notes:"First week back. All runs HR < 150. Thu off.",
+    days:[
+      {am:"Easy 2.5mi+strides", pm:null,          type:"easy"},
+      {am:"Easy 3mi",           pm:"Strength A",   type:"easy"},
+      {am:"Easy 2.5mi",         pm:null,           type:"easy"},
+      {am:"Rest",               pm:null,           type:"rest"},
+      {am:"Easy 3mi",           pm:"Strength A",   type:"easy"},
+      {am:"Easy 5mi",           pm:null,           type:"easy"},
+      {am:"Rest",               pm:null,           type:"rest"},
+    ]},
+  { week:2,  miles:22, dates:"Apr 8–14",     notes:"Thu returns. Still no Sunday.",
+    days:[
+      {am:"Easy 3mi+strides",   pm:null,           type:"easy"},
+      {am:"Easy 3mi",           pm:"Strength A",   type:"easy"},
+      {am:"Easy 3mi",           pm:null,           type:"easy"},
+      {am:"Easy 3mi+strides",   pm:null,           type:"easy"},
+      {am:"Easy 4mi",           pm:"Strength A",   type:"easy"},
+      {am:"Easy 6mi",           pm:null,           type:"easy"},
+      {am:"Rest",               pm:null,           type:"rest"},
+    ]},
+  { week:3,  miles:24, dates:"Apr 15–21",    notes:"Peak Phase 1. Strides increase to 8×.",
+    days:[
+      {am:"Easy 3.5mi+strides", pm:null,           type:"easy"},
+      {am:"Easy 3.5mi",         pm:"Strength A",   type:"easy"},
+      {am:"Easy 3mi",           pm:null,           type:"easy"},
+      {am:"Easy 3.5mi+strides", pm:null,           type:"easy"},
+      {am:"Easy 4mi",           pm:"Strength A",   type:"easy"},
+      {am:"Easy 6mi",           pm:null,           type:"easy"},
+      {am:"Rest",               pm:null,           type:"rest"},
+    ]},
+  { week:4,  miles:16, dates:"Apr 22–28",    notes:"Down week. Thu off. Last week of caloric deficit.",
+    days:[
+      {am:"Easy 2.5mi+strides", pm:null,           type:"easy"},
+      {am:"Easy 3mi",           pm:"Strength A",   type:"easy"},
+      {am:"Easy 2.5mi",         pm:null,           type:"easy"},
+      {am:"Rest",               pm:null,           type:"rest"},
+      {am:"Easy 3mi",           pm:"Strength A*",  type:"easy"},
+      {am:"Easy 5mi",           pm:null,           type:"easy"},
+      {am:"Rest",               pm:null,           type:"rest"},
+    ]},
+  { week:5,  miles:26, dates:"Apr 29–May 5", notes:"First threshold session. HR cap 175.",
+    days:[
+      {am:"Easy 3.5mi+strides",  pm:null,           type:"easy"},
+      {am:"2×10min Threshold",   pm:"Strength B",   type:"quality"},
+      {am:"Easy 3.5mi",          pm:null,           type:"easy"},
+      {am:"Easy 3.5mi+strides",  pm:null,           type:"easy"},
+      {am:"Easy/mod 5mi",        pm:"Strength B",   type:"easy"},
+      {am:"Easy 5.5mi",          pm:null,           type:"easy"},
+      {am:"Rest",                pm:null,           type:"rest"},
+    ]},
+  { week:6,  miles:30, dates:"May 6–12",     notes:"Peak threshold volume.",
+    days:[
+      {am:"Easy 3mi+strides",      pm:null,           type:"easy"},
+      {am:"3×10min Threshold",     pm:"Strength B",   type:"quality"},
+      {am:"Easy 3mi",              pm:null,           type:"easy"},
+      {am:"Easy 3mi+strides",      pm:null,           type:"easy"},
+      {am:"Easy/mod 6mi+strides",  pm:"Strength B",   type:"easy"},
+      {am:"Easy 5mi",              pm:null,           type:"easy"},
+      {am:"Easy 4mi",              pm:null,           type:"easy"},
+    ]},
+  { week:7,  miles:22, dates:"May 13–19",    notes:"Down week −25%. Practice Mile 0 (target 5:20–5:40).",
+    milestone:"🏁 Practice Mile 0",
+    days:[
+      {am:"Easy 2mi",            pm:null,           type:"easy"},
+      {am:"2×8min Threshold",    pm:"Strength B",   type:"quality"},
+      {am:"Easy 2mi",            pm:null,           type:"easy"},
+      {am:"Easy 3mi",            pm:null,           type:"easy"},
+      {am:"PRACTICE MILE 0",     pm:null,           type:"quality"},
+      {am:"Easy 4mi",            pm:null,           type:"easy"},
+      {am:"Easy 2mi",            pm:null,           type:"easy"},
+    ]},
+  { week:8,  miles:28, dates:"May 20–26",    notes:"First VO2max. Strength drops to Tue PM only.",
+    days:[
+      {am:"Easy 4mi",            pm:null,           type:"easy"},
+      {am:"4×800m VO2max",       pm:"Strength C",   type:"quality"},
+      {am:"Easy 4mi+strides",    pm:null,           type:"easy"},
+      {am:"Easy 4mi",            pm:null,           type:"easy"},
+      {am:"6×400m @88–92s",      pm:null,           type:"quality"},
+      {am:"Easy 8mi",            pm:null,           type:"easy"},
+      {am:"Easy 6mi",            pm:null,           type:"easy"},
+    ]},
+  { week:9,  miles:31, dates:"May 27–Jun 2", notes:"Practice Mile 1 (target 5:10–5:20). Even splits > fast time.",
+    milestone:"🏁 Practice Mile 1",
+    days:[
+      {am:"Easy 4mi",            pm:null,           type:"easy"},
+      {am:"5×800m VO2max",       pm:"Strength C",   type:"quality"},
+      {am:"Easy 4mi+strides",    pm:null,           type:"easy"},
+      {am:"Easy 3.5mi",          pm:null,           type:"easy"},
+      {am:"PRACTICE MILE 1",     pm:null,           type:"quality"},
+      {am:"Easy 6mi",            pm:null,           type:"easy"},
+      {am:"Easy 4.5mi",          pm:null,           type:"easy"},
+    ]},
+  { week:10, miles:26, dates:"Jun 3–9",      notes:"1200m reps. Friday 400s approach goal pace.",
+    days:[
+      {am:"Easy 4mi",            pm:null,           type:"easy"},
+      {am:"3×1200m VO2max",      pm:"Strength C",   type:"quality"},
+      {am:"Easy 4mi+strides",    pm:null,           type:"easy"},
+      {am:"Easy 4mi",            pm:null,           type:"easy"},
+      {am:"6×400m @77–80s",      pm:null,           type:"quality"},
+      {am:"Easy 8mi",            pm:null,           type:"easy"},
+      {am:"Easy 6mi",            pm:null,           type:"easy"},
+    ]},
+  { week:11, miles:24, dates:"Jun 10–16",    notes:"Practice Mile 2 (target 5:00–5:10). Execute sub-5 plan exactly.",
+    milestone:"🏁 Practice Mile 2",
+    days:[
+      {am:"Easy 4mi",            pm:null,           type:"easy"},
+      {am:"4×800m fast",         pm:null,           type:"quality"},
+      {am:"Easy 4mi+strides",    pm:null,           type:"easy"},
+      {am:"Easy 3.5mi",          pm:null,           type:"easy"},
+      {am:"PRACTICE MILE 2",     pm:null,           type:"quality"},
+      {am:"Easy 5.5mi",          pm:null,           type:"easy"},
+      {am:"Easy 3.5mi",          pm:null,           type:"easy"},
+    ]},
+  { week:12, miles:14, dates:"Jun 17–23",    notes:"Volume drops to 35% of peak. Legs should feel restless.",
+    days:[
+      {am:"Easy 3mi",            pm:null,           type:"easy"},
+      {am:"3×400m @75s",         pm:null,           type:"quality"},
+      {am:"Easy 2.5mi",          pm:null,           type:"easy"},
+      {am:"2×200m CNS primer",   pm:null,           type:"quality"},
+      {am:"Rest",                pm:null,           type:"rest"},
+      {am:"Easy 2.5mi+strides",  pm:null,           type:"easy"},
+      {am:"Rest",                pm:null,           type:"rest"},
+    ]},
+  { week:13, miles:9,  dates:"Jun 24–29",    notes:"Minimal running. Rest Thu–Fri. TEST DAY ~Jun 29.",
+    milestone:"🎯 TEST DAY",
+    days:[
+      {am:"Easy 2.5mi+strides",  pm:null,           type:"easy"},
+      {am:"Easy 2mi",            pm:null,           type:"easy"},
+      {am:"Easy 2mi+strides",    pm:null,           type:"easy"},
+      {am:"Rest",                pm:null,           type:"rest"},
+      {am:"Rest",                pm:null,           type:"rest"},
+      {am:"Easy 2mi+strides",    pm:null,           type:"easy"},
+      {am:"TEST DAY 🔥",         pm:null,           type:"quality"},
+    ]},
+];
+
+const DAY_LABELS = ["MON","TUE","WED","THU","FRI","SAT","SUN"];
+const getPhaseIdx = w => w<=4?0:w<=7?1:w<=11?2:3;
+
+// ── GIST API ───────────────────────────────────────────────────────────────
+async function gistLoad(token, gistId) {
+  const r = await fetch(`https://api.github.com/gists/${gistId}`, {
+    headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+  });
+  if (!r.ok) throw new Error(`GitHub ${r.status}`);
+  const data = await r.json();
+  const file = data.files[GIST_FILENAME];
+  if (!file) return null;
+  return JSON.parse(file.content);
+}
+
+async function gistSave(token, gistId, payload) {
+  const r = await fetch(`https://api.github.com/gists/${gistId}`, {
+    method: "PATCH",
+    headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json", "Content-Type": "application/json" },
+    body: JSON.stringify({ files: { [GIST_FILENAME]: { content: JSON.stringify(payload) } } })
+  });
+  if (!r.ok) throw new Error(`GitHub ${r.status}`);
+}
+
+// ── SETUP SCREEN ───────────────────────────────────────────────────────────
+function SetupScreen({ onConnect }) {
+  const [token, setToken] = useState("");
+  const [gistId, setGistId] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const connect = async () => {
+    setLoading(true); setError("");
+    try {
+      const data = await gistLoad(token.trim(), gistId.trim());
+      localStorage.setItem("mt_token", token.trim());
+      localStorage.setItem("mt_gist", gistId.trim());
+      onConnect(token.trim(), gistId.trim(), data || { completed: {}, mileTimes: { pm0:"", pm1:"", pm2:"", test:"" } });
+    } catch(e) {
+      setError("Could not connect. Check your token and Gist ID.");
+    } finally { setLoading(false); }
+  };
+
+  return (
+    <div className="setup">
+      <div className="setup-card">
+        <div className="setup-title">SUB-5:00<span style={{color:"#4ade80"}}>.</span></div>
+        <div className="setup-sub">MILE BLOCK · APR–JUN 2026</div>
+
+        <div className="setup-field">
+          <label className="setup-label">GITHUB PERSONAL ACCESS TOKEN</label>
+          <input className="setup-input" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+            value={token} onChange={e => setToken(e.target.value)} />
+        </div>
+        <div className="setup-field">
+          <label className="setup-label">GIST ID</label>
+          <input className="setup-input" placeholder="a1b2c3d4e5f6..."
+            value={gistId} onChange={e => setGistId(e.target.value)} />
+        </div>
+
+        <button className="setup-btn" onClick={connect} disabled={!token || !gistId || loading}>
+          {loading ? "CONNECTING…" : "CONNECT →"}
+        </button>
+        {error && <div className="setup-error">{error}</div>}
+
+        <div className="setup-hint">
+          Token needs only the <strong style={{color:"#555"}}>gist</strong> scope.<br/>
+          Gist ID is the long string in the URL of your gist.<br/>
+          Credentials are stored in your browser only — never transmitted except to GitHub.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── MAIN TRACKER ───────────────────────────────────────────────────────────
+function Tracker({ token, gistId, initialData }) {
+  const [completed, setCompleted] = useState(initialData.completed || {});
+  const [mileTimes, setMileTimes] = useState(initialData.mileTimes || { pm0:"", pm1:"", pm2:"", test:"" });
+  const [expanded, setExpanded]   = useState(null);
+  const [saveStatus, setSaveStatus] = useState(null); // null | "saving" | "saved" | "error"
+  const saveTimer = useRef(null);
+
+  const persist = useCallback((comp, times) => {
+    clearTimeout(saveTimer.current);
+    setSaveStatus("saving");
+    saveTimer.current = setTimeout(async () => {
+      try {
+        await gistSave(token, gistId, { completed: comp, mileTimes: times });
+        setSaveStatus("saved");
+        setTimeout(() => setSaveStatus(null), 1500);
+      } catch {
+        setSaveStatus("error");
+      }
+    }, 600);
+  }, [token, gistId]);
+
+  const toggle = key => {
+    setCompleted(prev => {
+      const next = { ...prev, [key]: !prev[key] };
+      persist(next, mileTimes);
+      return next;
+    });
+  };
+
+  const updateTime = (key, val) => {
+    setMileTimes(prev => {
+      const next = { ...prev, [key]: val };
+      persist(completed, next);
+      return next;
+    });
+  };
+
+  // Totals
+  const { total, done } = weekData.reduce((acc, w) => {
+    w.days.forEach((d,i) => {
+      if (d.type !== "rest") { acc.total++; if (completed[`${w.week}-${i}-am`]) acc.done++; }
+      if (d.pm)              { acc.total++; if (completed[`${w.week}-${i}-pm`]) acc.done++; }
+    });
+    return acc;
+  }, { total:0, done:0 });
+  const pct = Math.round((done/total)*100);
+
+  const currentWeek = (() => {
+    for (const w of weekData) {
+      const allDone = w.days.every((d,i) =>
+        (d.type==="rest" || completed[`${w.week}-${i}-am`]) &&
+        (!d.pm || completed[`${w.week}-${i}-pm`])
+      );
+      if (!allDone) return w.week;
+    }
+    return 13;
+  })();
+
+  const phaseProgress = phases.map(p => {
+    let t=0, d=0;
+    weekData.filter(w=>p.weeks.includes(w.week)).forEach(w=>{
+      w.days.forEach((day,i)=>{
+        if (day.type!=="rest") { t++; if(completed[`${w.week}-${i}-am`]) d++; }
+        if (day.pm)            { t++; if(completed[`${w.week}-${i}-pm`]) d++; }
+      });
+    });
+    return { ...p, pct: t ? Math.round((d/t)*100) : 0 };
+  });
+
+  const amBg = (phase, type, done) => {
+    if (type==="rest") return "transparent";
+    if (done) return type==="quality" ? phase.color : "#4ade80";
+    return type==="quality" ? phase.color+"22" : "#1f1f1f";
+  };
+  const amBorder = (phase, type, done) => {
+    if (type==="rest") return "#1a1a1a";
+    if (done) return type==="quality" ? phase.color : "#4ade8077";
+    return type==="quality" ? phase.color+"44" : "#2a2a2a";
+  };
+
+  const S = { // inline style helpers
+    row: { display:"flex", alignItems:"center", gap:10, padding:"7px 12px", cursor:"pointer" },
+    dot: (phase, type, isDone) => ({
+      width:12, height:12,
+      borderRadius: type==="quality" ? 2 : "50%",
+      background: amBg(phase, type, isDone),
+      border: `1px solid ${amBorder(phase, type, isDone)}`,
+      cursor: type==="rest" ? "default" : "pointer",
+      flexShrink:0, transition:"all 0.15s",
+    }),
+    diamond: isDone => ({
+      width:10, height:10, borderRadius:1, transform:"rotate(45deg)",
+      background: isDone ? "#60a5fa" : "#60a5fa22",
+      border: `1px solid ${isDone ? "#60a5fa" : "#60a5fa44"}`,
+      cursor:"pointer", flexShrink:0, transition:"all 0.15s",
+    }),
+  };
+
+  return (
+    <div style={{ minHeight:"100vh", background:"#0a0a0a", padding:"24px 16px", maxWidth:700, margin:"0 auto" }}>
+
+      {/* Header */}
+      <div style={{ marginBottom:28 }}>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
+          <div>
+            <div style={{ fontSize:10, letterSpacing:4, color:"#444", marginBottom:6 }}>APR 1 → JUN 29, 2026</div>
+            <div style={{ fontSize:30, fontWeight:900, letterSpacing:-1, lineHeight:1 }}>
+              SUB-5:00<span style={{color:"#4ade80"}}>.</span>
+            </div>
+            <div style={{ fontSize:11, color:"#444", marginTop:4, letterSpacing:2 }}>13-WEEK MILE BLOCK</div>
+          </div>
+          <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:6 }}>
+            {saveStatus && (
+              <div className="save-badge" style={{
+                color: saveStatus==="error" ? "#f87171" : saveStatus==="saving" ? "#666" : "#4ade80",
+                border: `1px solid ${saveStatus==="error" ? "#f8717144" : saveStatus==="saving" ? "#333" : "#4ade8044"}`,
+              }}>
+                {saveStatus==="saving" ? "SAVING…" : saveStatus==="saved" ? "SAVED ✓" : "SAVE ERROR"}
+              </div>
+            )}
+            <button onClick={() => { localStorage.clear(); window.location.reload(); }}
+              style={{ fontSize:8, color:"#333", background:"transparent", border:"1px solid #1a1a1a", borderRadius:3, padding:"3px 7px", cursor:"pointer", letterSpacing:1 }}>
+              DISCONNECT
+            </button>
+          </div>
+        </div>
+
+        {/* Overall bar */}
+        <div style={{ marginTop:20 }}>
+          <div style={{ display:"flex", justifyContent:"space-between", marginBottom:5, fontSize:10, color:"#555" }}>
+            <span>{done} / {total} sessions</span>
+            <span style={{color:"#4ade80"}}>{pct}%</span>
+          </div>
+          <div style={{ height:5, background:"#1a1a1a", borderRadius:3, overflow:"hidden" }}>
+            <div style={{ height:"100%", width:`${pct}%`, background:"linear-gradient(90deg,#4ade80,#fb923c,#f87171,#c084fc)", transition:"width 0.4s" }} />
+          </div>
+        </div>
+
+        {/* Phase bars */}
+        <div style={{ display:"flex", gap:6, marginTop:10 }}>
+          {phaseProgress.map(p => (
+            <div key={p.name} style={{ flex:p.weeks.length, minWidth:0 }}>
+              <div style={{ fontSize:8, color:"#333", letterSpacing:1, marginBottom:3, overflow:"hidden", whiteSpace:"nowrap" }}>{p.name}</div>
+              <div style={{ height:3, background:"#1a1a1a", borderRadius:2, overflow:"hidden" }}>
+                <div style={{ height:"100%", width:`${p.pct}%`, background:p.color, transition:"width 0.4s" }} />
+              </div>
+              <div style={{ fontSize:8, color:"#333", marginTop:2 }}>{p.pct}%</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Mile times */}
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr 1fr", gap:8, marginBottom:24, background:"#0f0f0f", border:"1px solid #1c1c1c", borderRadius:8, padding:12 }}>
+        {[
+          {key:"pm0", label:"WK 7 MILE", target:"5:20–5:40"},
+          {key:"pm1", label:"WK 9 MILE", target:"5:10–5:20"},
+          {key:"pm2", label:"WK 11 MILE",target:"5:00–5:10"},
+          {key:"test",label:"TEST DAY",  target:"sub-5:00"},
+        ].map(m => (
+          <div key={m.key} style={{ textAlign:"center" }}>
+            <div style={{ fontSize:8, color:"#444", letterSpacing:1, marginBottom:4 }}>{m.label}</div>
+            <input value={mileTimes[m.key]} onChange={e => updateTime(m.key, e.target.value)}
+              placeholder={m.target}
+              style={{
+                width:"100%", background: mileTimes[m.key] ? "#0a1a0a" : "transparent",
+                border:`1px solid ${mileTimes[m.key] ? "#4ade8055" : "#222"}`,
+                borderRadius:4, color: mileTimes[m.key] ? "#4ade80" : "#333",
+                fontSize:10, textAlign:"center", padding:"5px 2px", outline:"none",
+              }} />
+          </div>
+        ))}
+      </div>
+
+      {/* Legend */}
+      <div style={{ display:"flex", gap:16, marginBottom:14, fontSize:8, color:"#444", letterSpacing:1 }}>
+        <span>● EASY RUN</span><span>■ QUALITY RUN</span>
+        <span style={{color:"#60a5fa88"}}>◆ STRENGTH</span>
+      </div>
+
+      {/* Weeks */}
+      <div style={{ display:"flex", flexDirection:"column", gap:3 }}>
+        {weekData.map(w => {
+          const phase = phases[getPhaseIdx(w.week)];
+          let wt=0, wd=0;
+          w.days.forEach((d,i)=>{
+            if(d.type!=="rest"){wt++;if(completed[`${w.week}-${i}-am`])wd++;}
+            if(d.pm){wt++;if(completed[`${w.week}-${i}-pm`])wd++;}
+          });
+          const isExp     = expanded === w.week;
+          const isCurrent = w.week === currentWeek;
+          const isComplete= wd === wt;
+
+          return (
+            <div key={w.week} style={{
+              border:`1px solid ${isCurrent ? phase.color+"44" : isComplete ? "#1f2f1f" : "#161616"}`,
+              borderRadius:6, overflow:"hidden", background: isCurrent ? "#0c0c0c" : "transparent",
+            }}>
+              {/* Row */}
+              <div style={S.row} onClick={() => setExpanded(isExp ? null : w.week)}>
+                <div style={{ fontSize:10, fontWeight:700, color: isCurrent ? phase.color : "#444", letterSpacing:1, minWidth:40 }}>
+                  WK {w.week}
+                </div>
+                <div style={{ fontSize:9, color:"#333", minWidth:38 }}>{w.miles} mi</div>
+
+                <div style={{ display:"flex", gap:4, flex:1 }}>
+                  {w.days.map((d,i) => {
+                    const amDone = completed[`${w.week}-${i}-am`];
+                    const pmDone = completed[`${w.week}-${i}-pm`];
+                    const isRest = d.type==="rest";
+                    return (
+                      <div key={i} style={{ display:"flex", flexDirection:"column", gap:2, alignItems:"center" }}>
+                        <div style={S.dot(phase, d.type, amDone)}
+                          title={`${DAY_LABELS[i]} AM: ${d.am}`}
+                          onClick={e=>{ e.stopPropagation(); if(!isRest) toggle(`${w.week}-${i}-am`); }} />
+                        {d.pm
+                          ? <div style={S.diamond(pmDone)}
+                              title={`${DAY_LABELS[i]} PM: ${d.pm}`}
+                              onClick={e=>{ e.stopPropagation(); toggle(`${w.week}-${i}-pm`); }} />
+                          : <div style={{width:10,height:10}} />
+                        }
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div style={{ fontSize:9, color: isComplete ? "#4ade80" : "#333", minWidth:26, textAlign:"right" }}>
+                  {wd}/{wt}
+                </div>
+                {w.milestone && <div style={{ fontSize:9, color:phase.color, whiteSpace:"nowrap" }}>{w.milestone}</div>}
+              </div>
+
+              {/* Expanded */}
+              {isExp && (
+                <div style={{ padding:"0 12px 12px", borderTop:"1px solid #161616", paddingTop:10 }}>
+                  <div style={{ fontSize:9, color:"#444", marginBottom:10 }}>{w.dates} · {w.notes}</div>
+                  <div style={{ display:"grid", gridTemplateColumns:"repeat(7,1fr)", gap:4 }}>
+                    {w.days.map((d,i) => {
+                      const isRest = d.type==="rest";
+                      const amDone = completed[`${w.week}-${i}-am`];
+                      const pmDone = completed[`${w.week}-${i}-pm`];
+                      return (
+                        <div key={i} style={{ textAlign:"center" }}>
+                          <div style={{ fontSize:7, color:"#444", letterSpacing:1, marginBottom:4 }}>{DAY_LABELS[i]}</div>
+                          <div onClick={()=>{ if(!isRest) toggle(`${w.week}-${i}-am`); }}
+                            style={{
+                              padding:"5px 3px", marginBottom: d.pm ? 3 : 0,
+                              background: isRest ? "transparent" : amDone ? (d.type==="quality" ? phase.color+"22" : "#0d1a0d") : "#111",
+                              border:`1px solid ${isRest ? "#161616" : amDone ? (d.type==="quality" ? phase.color+"66" : "#4ade8044") : "#1c1c1c"}`,
+                              borderRadius:4, cursor: isRest ? "default" : "pointer", opacity: isRest ? 0.3 : 1,
+                            }}>
+                            <div style={{ fontSize:7, color: d.type==="quality" ? phase.color : "#777", lineHeight:1.4 }}>{d.am}</div>
+                            {!isRest && amDone && <div style={{ fontSize:7, color:"#4ade80", marginTop:2 }}>✓</div>}
+                          </div>
+                          {d.pm && (
+                            <div onClick={()=>toggle(`${w.week}-${i}-pm`)}
+                              style={{
+                                padding:"5px 3px",
+                                background: pmDone ? "#0a1020" : "#111",
+                                border:`1px solid ${pmDone ? "#60a5fa55" : "#1c1c1c"}`,
+                                borderRadius:4, cursor:"pointer",
+                              }}>
+                              <div style={{ fontSize:7, color:"#60a5fa", lineHeight:1.4 }}>{d.pm}</div>
+                              {pmDone && <div style={{ fontSize:7, color:"#60a5fa", marginTop:2 }}>✓</div>}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ marginTop:20, textAlign:"center", fontSize:8, color:"#2a2a2a", letterSpacing:1 }}>
+        ● EASY &nbsp;·&nbsp; ■ QUALITY &nbsp;·&nbsp; ◆ STRENGTH
+      </div>
+    </div>
+  );
+}
+
+// ── ROOT ───────────────────────────────────────────────────────────────────
+function App() {
+  const [creds, setCreds] = useState(() => {
+    const token  = localStorage.getItem("mt_token");
+    const gistId = localStorage.getItem("mt_gist");
+    return (token && gistId) ? { token, gistId } : null;
+  });
+  const [data, setData]     = useState(null);
+  const [loading, setLoading] = useState(!!creds);
+  const [error, setError]   = useState("");
+
+  useEffect(() => {
+    if (!creds) return;
+    gistLoad(creds.token, creds.gistId)
+      .then(d => setData(d || { completed:{}, mileTimes:{ pm0:"", pm1:"", pm2:"", test:"" } }))
+      .catch(() => { setError("Could not load data. Check your connection."); setLoading(false); })
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (!creds) return <SetupScreen onConnect={(token, gistId, d) => { setCreds({token, gistId}); setData(d); }} />;
+  if (loading) return <div style={{ minHeight:"100vh", background:"#0a0a0a", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Courier New',monospace", color:"#333", fontSize:11, letterSpacing:4 }}>LOADING…</div>;
+  if (error)   return <div style={{ minHeight:"100vh", background:"#0a0a0a", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Courier New',monospace", color:"#f87171", fontSize:11, letterSpacing:2 }}>{error}</div>;
+  if (data)    return <Tracker token={creds.token} gistId={creds.gistId} initialData={data} />;
+  return null;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
