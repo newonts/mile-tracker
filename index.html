@@ -31,7 +31,6 @@
   .setup-error { font-size: 10px; color: #f87171; margin-top: 8px; letter-spacing: 1px; }
   .save-badge { font-size: 10px; letter-spacing: 2px; padding: 4px 8px; border-radius: 3px; transition: all 0.3s; }
 
-  /* Edit popup overlay */
   .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 24px; }
   .edit-popup { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 20px; width: 100%; max-width: 280px; }
   .edit-popup-title { font-size: 9px; color: #777; letter-spacing: 2px; margin-bottom: 4px; }
@@ -63,7 +62,7 @@ const phases = [
 ];
 
 const weekData = [
-  { week:1,  miles:16, dates:"Apr 1–7",      notes:"First week back. All runs HR < 150. Thu off.",
+  { week:1,  miles:16, dates:"Mar 30–Apr 5",  notes:"First week back. All runs HR < 150. Thu off.",
     days:[
       {am:"Easy 2.5mi+strides", pm:null,         type:"easy",    plannedMi:2.5},
       {am:"Easy 3mi",           pm:"Strength A",  type:"easy",    plannedMi:3},
@@ -73,7 +72,7 @@ const weekData = [
       {am:"Easy 5mi",           pm:null,          type:"easy",    plannedMi:5},
       {am:"Rest",               pm:null,          type:"rest",    plannedMi:0},
     ]},
-  { week:2,  miles:22, dates:"Apr 8–14",     notes:"Thu returns. Still no Sunday.",
+  { week:2,  miles:22, dates:"Apr 6–12",      notes:"Thu returns. Still no Sunday.",
     days:[
       {am:"Easy 3mi+strides",   pm:null,          type:"easy",    plannedMi:3},
       {am:"Easy 3mi",           pm:"Strength A",  type:"easy",    plannedMi:3},
@@ -83,7 +82,7 @@ const weekData = [
       {am:"Easy 6mi",           pm:null,          type:"easy",    plannedMi:6},
       {am:"Rest",               pm:null,          type:"rest",    plannedMi:0},
     ]},
-  { week:3,  miles:24, dates:"Apr 15–21",    notes:"Peak Phase 1. Strides increase to 8×.",
+  { week:3,  miles:24, dates:"Apr 13–19",     notes:"Peak Phase 1. Strides increase to 8×.",
     days:[
       {am:"Easy 3.5mi+strides", pm:null,          type:"easy",    plannedMi:3.5},
       {am:"Easy 3.5mi",         pm:"Strength A",  type:"easy",    plannedMi:3.5},
@@ -93,7 +92,7 @@ const weekData = [
       {am:"Easy 6mi",           pm:null,          type:"easy",    plannedMi:6},
       {am:"Rest",               pm:null,          type:"rest",    plannedMi:0},
     ]},
-  { week:4,  miles:16, dates:"Apr 22–28",    notes:"Down week. Thu off. Last week of caloric deficit.",
+  { week:4,  miles:16, dates:"Apr 20–26",     notes:"Down week. Thu off. Last week of caloric deficit.",
     days:[
       {am:"Easy 2.5mi+strides", pm:null,          type:"easy",    plannedMi:2.5},
       {am:"Easy 3mi",           pm:"Strength A",  type:"easy",    plannedMi:3},
@@ -103,7 +102,7 @@ const weekData = [
       {am:"Easy 5mi",           pm:null,          type:"easy",    plannedMi:5},
       {am:"Rest",               pm:null,          type:"rest",    plannedMi:0},
     ]},
-  { week:5,  miles:26, dates:"Apr 29–May 5", notes:"First threshold session. HR cap 175.",
+  { week:5,  miles:26, dates:"Apr 27–May 3",  notes:"First threshold session. HR cap 175.",
     days:[
       {am:"Easy 3.5mi+strides",  pm:null,          type:"easy",    plannedMi:3.5},
       {am:"2×10min Threshold",   pm:"Strength B",  type:"quality", plannedMi:4},
@@ -113,7 +112,7 @@ const weekData = [
       {am:"Easy 5.5mi",          pm:null,          type:"easy",    plannedMi:5.5},
       {am:"Rest",                pm:null,          type:"rest",    plannedMi:0},
     ]},
-  { week:6,  miles:30, dates:"May 6–12",     notes:"Peak threshold volume.",
+  { week:6,  miles:30, dates:"May 4–10",      notes:"Peak threshold volume.",
     days:[
       {am:"Easy 3mi+strides",     pm:null,          type:"easy",    plannedMi:3},
       {am:"3×10min Threshold",    pm:"Strength B",  type:"quality", plannedMi:5},
@@ -123,7 +122,7 @@ const weekData = [
       {am:"Easy 5mi",             pm:null,          type:"easy",    plannedMi:5},
       {am:"Easy 4mi",             pm:null,          type:"easy",    plannedMi:4},
     ]},
-  { week:7,  miles:22, dates:"May 13–19",    notes:"Down week −25%. Practice Mile 0 (target 5:20–5:40).",
+  { week:7,  miles:22, dates:"May 11–17",     notes:"Down week −25%. Practice Mile 0 (target 5:20–5:40).",
     milestone:"🏁 Practice Mile 0",
     days:[
       {am:"Easy 2mi",            pm:null,          type:"easy",    plannedMi:2},
@@ -134,7 +133,7 @@ const weekData = [
       {am:"Easy 4mi",            pm:null,          type:"easy",    plannedMi:4},
       {am:"Easy 2mi",            pm:null,          type:"easy",    plannedMi:2},
     ]},
-  { week:8,  miles:28, dates:"May 20–26",    notes:"First VO2max. Strength drops to Tue PM only.",
+  { week:8,  miles:28, dates:"May 18–24",     notes:"First VO2max. Strength drops to Tue PM only.",
     days:[
       {am:"Easy 4mi",            pm:null,          type:"easy",    plannedMi:4},
       {am:"4×800m VO2max",       pm:"Strength C",  type:"quality", plannedMi:5},
@@ -144,7 +143,7 @@ const weekData = [
       {am:"Easy 8mi",            pm:null,          type:"easy",    plannedMi:8},
       {am:"Easy 6mi",            pm:null,          type:"easy",    plannedMi:6},
     ]},
-  { week:9,  miles:31, dates:"May 27–Jun 2", notes:"Practice Mile 1 (target 5:10–5:20). Even splits > fast time.",
+  { week:9,  miles:31, dates:"May 25–31",     notes:"Practice Mile 1 (target 5:10–5:20). Even splits > fast time.",
     milestone:"🏁 Practice Mile 1",
     days:[
       {am:"Easy 4mi",            pm:null,          type:"easy",    plannedMi:4},
@@ -155,7 +154,7 @@ const weekData = [
       {am:"Easy 6mi",            pm:null,          type:"easy",    plannedMi:6},
       {am:"Easy 4.5mi",          pm:null,          type:"easy",    plannedMi:4.5},
     ]},
-  { week:10, miles:26, dates:"Jun 3–9",      notes:"1200m reps. Friday 400s approach goal pace.",
+  { week:10, miles:26, dates:"Jun 1–7",       notes:"1200m reps. Friday 400s approach goal pace.",
     days:[
       {am:"Easy 4mi",            pm:null,          type:"easy",    plannedMi:4},
       {am:"3×1200m VO2max",      pm:"Strength C",  type:"quality", plannedMi:5},
@@ -165,7 +164,7 @@ const weekData = [
       {am:"Easy 8mi",            pm:null,          type:"easy",    plannedMi:8},
       {am:"Easy 6mi",            pm:null,          type:"easy",    plannedMi:6},
     ]},
-  { week:11, miles:24, dates:"Jun 10–16",    notes:"Practice Mile 2 (target 5:00–5:10). Execute sub-5 plan exactly.",
+  { week:11, miles:24, dates:"Jun 8–14",      notes:"Practice Mile 2 (target 5:00–5:10). Execute sub-5 plan exactly.",
     milestone:"🏁 Practice Mile 2",
     days:[
       {am:"Easy 4mi",            pm:null,          type:"easy",    plannedMi:4},
@@ -176,26 +175,41 @@ const weekData = [
       {am:"Easy 5.5mi",          pm:null,          type:"easy",    plannedMi:5.5},
       {am:"Easy 3.5mi",          pm:null,          type:"easy",    plannedMi:3.5},
     ]},
-  { week:12, miles:14, dates:"Jun 17–23",    notes:"Volume drops to 35% of peak. Legs should feel restless.",
+  // Week 12: sharpening Mon–Thu, then easy/rest into test day
+  // Mon Jun 15 — Easy 3mi
+  // Tue Jun 17 — 3×400m @75s (sharpening)
+  // Wed Jun 18 — Easy 2mi
+  // Thu Jun 19 — Easy 2mi (200s moved to Tue Jun 24)
+  // Fri Jun 20 — Rest
+  // Sat Jun 21 — Easy 2mi + strides
+  // Sun Jun 22 — Rest
+  { week:12, miles:12, dates:"Jun 15–21",     notes:"Sharpening week. 400s Tue. Easy/rest Thu–Sun. 200s moved to Tue Jun 24.",
     days:[
       {am:"Easy 3mi",            pm:null,          type:"easy",    plannedMi:3},
       {am:"3×400m @75s",         pm:null,          type:"quality", plannedMi:3},
-      {am:"Easy 2.5mi",          pm:null,          type:"easy",    plannedMi:2.5},
-      {am:"2×200m CNS primer",   pm:null,          type:"quality", plannedMi:2},
+      {am:"Easy 2mi",            pm:null,          type:"easy",    plannedMi:2},
+      {am:"Easy 2mi",            pm:null,          type:"easy",    plannedMi:2},
       {am:"Rest",                pm:null,          type:"rest",    plannedMi:0},
-      {am:"Easy 2.5mi+strides",  pm:null,          type:"easy",    plannedMi:2.5},
+      {am:"Easy 2mi+strides",    pm:null,          type:"easy",    plannedMi:2},
       {am:"Rest",                pm:null,          type:"rest",    plannedMi:0},
     ]},
-  { week:13, miles:9,  dates:"Jun 24–29",    notes:"Minimal running. Rest Thu–Fri. TEST DAY ~Jun 29.",
+  // Week 13: CNS primer Tue, rest Wed, TEST FRI
+  // Mon Jun 22 — Rest
+  // Tue Jun 24 — 2×200m @37s (CNS primer)
+  // Wed Jun 25 — Rest
+  // Thu — (not used, already past test)
+  // Fri Jun 26 — TEST DAY 🔥
+  // Sat/Sun — n/a
+  { week:13, miles:3,  dates:"Jun 22–26",     notes:"CNS primer Tue Jun 24. Full rest Wed. TEST DAY Fri Jun 26.",
     milestone:"🎯 TEST DAY",
     days:[
-      {am:"Easy 2.5mi+strides",  pm:null,          type:"easy",    plannedMi:2.5},
+      {am:"Rest",                pm:null,          type:"rest",    plannedMi:0},
       {am:"Easy 2mi",            pm:null,          type:"easy",    plannedMi:2},
-      {am:"Easy 2mi+strides",    pm:null,          type:"easy",    plannedMi:2},
       {am:"Rest",                pm:null,          type:"rest",    plannedMi:0},
+      {am:"2×200m @37s CNS",     pm:null,          type:"quality", plannedMi:1},
       {am:"Rest",                pm:null,          type:"rest",    plannedMi:0},
-      {am:"Easy 2mi+strides",    pm:null,          type:"easy",    plannedMi:2},
       {am:"TEST DAY 🔥",         pm:null,          type:"quality", plannedMi:1},
+      {am:"Rest",                pm:null,          type:"rest",    plannedMi:0},
     ]},
 ];
 
@@ -203,19 +217,6 @@ const DAY_LABELS  = ["MON","TUE","WED","THU","FRI","SAT","SUN"];
 const getPhaseIdx = w => w<=4?0:w<=7?1:w<=11?2:3;
 const MAX_PLANNED = 31;
 
-// Helpers — get planned miles for a run key
-function getPlanned(weekNum, dayIdx) {
-  const w = weekData.find(w => w.week === weekNum);
-  return w ? w.days[dayIdx].plannedMi : 0;
-}
-function getActualMi(key, completed, actuals) {
-  if (!completed[key]) return 0;
-  return actuals[key] !== undefined ? actuals[key] : getPlanned(
-    parseInt(key.split("-")[0]), parseInt(key.split("-")[1])
-  );
-}
-
-// ── GIST ──────────────────────────────────────────────────────────────────
 async function gistLoad(token, gistId) {
   const r = await fetch(`https://api.github.com/gists/${gistId}`, {
     headers: { Authorization:`token ${token}`, Accept:"application/vnd.github.v3+json" }
@@ -235,13 +236,11 @@ async function gistSave(token, gistId, payload) {
   if (!r.ok) throw new Error(`GitHub ${r.status}`);
 }
 
-// ── SETUP ─────────────────────────────────────────────────────────────────
 function SetupScreen({ onConnect }) {
   const [token,   setToken]   = useState("");
   const [gistId,  setGistId]  = useState("");
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState("");
-
   const connect = async () => {
     setLoading(true); setError("");
     try {
@@ -254,12 +253,11 @@ function SetupScreen({ onConnect }) {
     } catch { setError("Could not connect. Check your token and Gist ID."); }
     finally  { setLoading(false); }
   };
-
   return (
     <div className="setup">
       <div className="setup-card">
         <div className="setup-title">SUB-5:00<span style={{color:"#4ade80"}}>.</span></div>
-        <div className="setup-sub">MILE BLOCK · APR–JUN 2026</div>
+        <div className="setup-sub">MILE BLOCK · MAR–JUN 2026</div>
         <div className="setup-field">
           <label className="setup-label">GITHUB PERSONAL ACCESS TOKEN</label>
           <input className="setup-input" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" value={token} onChange={e=>setToken(e.target.value)} />
@@ -282,107 +280,68 @@ function SetupScreen({ onConnect }) {
   );
 }
 
-// ── VOLUME CHART ──────────────────────────────────────────────────────────
 function VolumeChart({ completed, actuals }) {
   const [hovered, setHovered] = useState(null);
   const CHART_H = 100;
-
   const weekActuals = weekData.map(w => {
     let mi = 0;
-    w.days.forEach((d, i) => {
+    w.days.forEach((d,i) => {
       const key = `${w.week}-${i}-am`;
-      if (d.type !== "rest" && completed[key]) {
-        mi += actuals[key] !== undefined ? actuals[key] : d.plannedMi;
-      }
+      if (d.type!=="rest" && completed[key]) mi += actuals[key]!==undefined ? actuals[key] : d.plannedMi;
     });
     return mi;
   });
-
   return (
     <div style={{ background:"#0f0f0f", border:"1px solid #1f1f1f", borderRadius:10, padding:"18px 16px 14px", marginBottom:20 }}>
       <div style={{ fontSize:10, color:"#777", letterSpacing:3, marginBottom:14 }}>WEEKLY VOLUME</div>
-
-      <div style={{ position:"relative", height: CHART_H + 24 }}>
-        {/* Gridlines */}
-        {[0,10,20,30].map(v => (
-          <div key={v} style={{
-            position:"absolute",
-            bottom: 24 + (v / MAX_PLANNED) * CHART_H,
-            left:0, right:24,
-            borderTop:`1px solid ${v===0?"#252525":"#181818"}`,
-          }}>
+      <div style={{ position:"relative", height:CHART_H+24 }}>
+        {[0,10,20,30].map(v=>(
+          <div key={v} style={{ position:"absolute", bottom:24+(v/MAX_PLANNED)*CHART_H, left:0, right:24, borderTop:`1px solid ${v===0?"#252525":"#181818"}` }}>
             <span style={{ position:"absolute", right:-22, top:-7, fontSize:8, color:"#444" }}>{v}</span>
           </div>
         ))}
-
-        {/* Bars */}
         <div style={{ position:"absolute", bottom:24, left:0, right:24, top:0, display:"flex", alignItems:"flex-end", gap:3 }}>
-          {weekData.map((w, idx) => {
-            const phase     = phases[getPhaseIdx(w.week)];
-            const plannedH  = (w.miles / MAX_PLANNED) * CHART_H;
-            const actualMi  = weekActuals[idx];
-            const actualH   = Math.min((actualMi / MAX_PLANNED) * CHART_H, plannedH);
-            const isHov     = hovered === idx;
-            const hasAny    = actualMi > 0;
-            const isCurrent = w.week === weekData.find(wk => {
-              return wk.days.some((d,i) => d.type!=="rest" && !completed[`${wk.week}-${i}-am`]);
-            })?.week;
-
+          {weekData.map((w,idx)=>{
+            const phase    = phases[getPhaseIdx(w.week)];
+            const plannedH = (w.miles/MAX_PLANNED)*CHART_H;
+            const actualMi = weekActuals[idx];
+            const actualH  = Math.min((actualMi/MAX_PLANNED)*CHART_H, plannedH);
+            const isHov    = hovered===idx;
+            const hasAny   = actualMi>0;
+            const isCurrent= w.week===weekData.find(wk=>wk.days.some((d,i)=>d.type!=="rest"&&!completed[`${wk.week}-${i}-am`]))?.week;
             return (
-              <div key={w.week}
-                onMouseEnter={()=>setHovered(idx)}
-                onMouseLeave={()=>setHovered(null)}
+              <div key={w.week} onMouseEnter={()=>setHovered(idx)} onMouseLeave={()=>setHovered(null)}
                 style={{ flex:1, position:"relative", height:"100%", display:"flex", alignItems:"flex-end" }}>
-                {/* Planned */}
-                <div style={{
-                  position:"absolute", bottom:0, left:0, right:0,
-                  height: plannedH,
-                  background: hasAny || isCurrent ? phase.color+"1a" : "#161616",
+                <div style={{ position:"absolute", bottom:0, left:0, right:0, height:plannedH,
+                  background:hasAny||isCurrent?phase.color+"1a":"#161616",
                   borderRadius:"3px 3px 0 0",
-                  border: isCurrent ? `1px solid ${phase.color}44` : "none",
-                  borderBottom:"none",
-                }} />
-                {/* Actual */}
-                {actualH > 0 && (
-                  <div style={{
-                    position:"absolute", bottom:0, left:0, right:0,
-                    height: actualH,
-                    background:`linear-gradient(to top, ${phase.color}, ${phase.color}cc)`,
-                    borderRadius: actualH >= plannedH-1 ? "3px 3px 0 0" : "0",
-                    transition:"height 0.4s ease",
-                  }} />
-                )}
-                {/* Tooltip */}
+                  border:isCurrent?`1px solid ${phase.color}44`:"none", borderBottom:"none" }} />
+                {actualH>0 && <div style={{ position:"absolute", bottom:0, left:0, right:0, height:actualH,
+                  background:`linear-gradient(to top, ${phase.color}, ${phase.color}cc)`,
+                  borderRadius:actualH>=plannedH-1?"3px 3px 0 0":"0", transition:"height 0.4s ease" }} />}
                 {isHov && (
-                  <div style={{
-                    position:"absolute", bottom: plannedH+8, left:"50%", transform:"translateX(-50%)",
+                  <div style={{ position:"absolute", bottom:plannedH+8, left:"50%", transform:"translateX(-50%)",
                     background:"#1c1c1c", border:`1px solid ${phase.color}55`, borderRadius:5,
                     padding:"5px 8px", whiteSpace:"nowrap", zIndex:10,
-                    fontSize:9, color:"#ccc", lineHeight:1.7, pointerEvents:"none",
-                  }}>
+                    fontSize:9, color:"#ccc", lineHeight:1.7, pointerEvents:"none" }}>
                     <div style={{color:phase.color, fontWeight:700, letterSpacing:1}}>WK {w.week}</div>
+                    <div style={{color:"#888", fontSize:8}}>{w.dates}</div>
                     <div>{w.miles} mi planned</div>
-                    {actualMi > 0 && <div style={{color:phase.color}}>{actualMi % 1 === 0 ? actualMi : actualMi.toFixed(1)} mi logged</div>}
+                    {actualMi>0 && <div style={{color:phase.color}}>{actualMi%1===0?actualMi:actualMi.toFixed(1)} mi logged</div>}
                   </div>
                 )}
               </div>
             );
           })}
         </div>
-
-        {/* X labels */}
         <div style={{ position:"absolute", bottom:0, left:0, right:24, display:"flex", gap:3 }}>
-          {weekData.map((w,idx) => (
-            <div key={w.week} style={{ flex:1, textAlign:"center", fontSize:8, color: hovered===idx ? phases[getPhaseIdx(w.week)].color : "#444" }}>
-              {w.week}
-            </div>
+          {weekData.map((w,idx)=>(
+            <div key={w.week} style={{ flex:1, textAlign:"center", fontSize:8, color:hovered===idx?phases[getPhaseIdx(w.week)].color:"#444" }}>{w.week}</div>
           ))}
         </div>
       </div>
-
-      {/* Phase legend */}
       <div style={{ display:"flex", gap:14, marginTop:12, flexWrap:"wrap" }}>
-        {phases.map(p => (
+        {phases.map(p=>(
           <div key={p.name} style={{ display:"flex", alignItems:"center", gap:5 }}>
             <div style={{ width:8, height:8, borderRadius:1, background:p.color }} />
             <span style={{ fontSize:9, color:"#666", letterSpacing:1 }}>{p.name}</span>
@@ -397,19 +356,11 @@ function VolumeChart({ completed, actuals }) {
   );
 }
 
-// ── EDIT POPUP ────────────────────────────────────────────────────────────
-function EditPopup({ sessionKey, sessionLabel, plannedMi, currentActual, onConfirm, onUncheck, onCancel }) {
-  const [val, setVal] = useState(
-    currentActual !== undefined ? String(currentActual) : String(plannedMi)
-  );
+function EditPopup({ sessionLabel, plannedMi, currentActual, onConfirm, onUncheck, onCancel }) {
+  const [val, setVal] = useState(currentActual!==undefined?String(currentActual):String(plannedMi));
   const inputRef = useRef(null);
-  useEffect(() => { inputRef.current?.focus(); inputRef.current?.select(); }, []);
-
-  const confirm = () => {
-    const num = parseFloat(val);
-    onConfirm(isNaN(num) ? plannedMi : num);
-  };
-
+  useEffect(()=>{ inputRef.current?.focus(); inputRef.current?.select(); },[]);
+  const confirm = () => { const n=parseFloat(val); onConfirm(isNaN(n)?plannedMi:n); };
   return (
     <div className="overlay" onClick={onCancel}>
       <div className="edit-popup" onClick={e=>e.stopPropagation()}>
@@ -430,160 +381,113 @@ function EditPopup({ sessionKey, sessionLabel, plannedMi, currentActual, onConfi
   );
 }
 
-// ── HOLDABLE DOT ──────────────────────────────────────────────────────────
-function HoldDot({ sessionKey, label, type, phase, isDone, isRest, onTap, onHold, style: extraStyle }) {
-  const holdTimer  = useRef(null);
-  const didHold    = useRef(false);
-
-  const start = () => {
-    didHold.current = false;
-    holdTimer.current = setTimeout(() => {
-      didHold.current = true;
-      onHold();
-    }, HOLD_MS);
-  };
-  const end = () => {
-    clearTimeout(holdTimer.current);
-    if (!didHold.current && !isRest) onTap();
-  };
-  const cancel = () => { clearTimeout(holdTimer.current); didHold.current = true; };
-
-  const bg = isRest ? "transparent"
-    : isDone  ? (type==="quality" ? phase.color : "#4ade80")
-    : (type==="quality" ? phase.color+"33" : "#2a2a2a");
-  const border = isRest ? "#222"
-    : isDone  ? (type==="quality" ? phase.color : "#4ade80aa")
-    : (type==="quality" ? phase.color+"77" : "#444");
-
+function HoldDot({ label, type, phase, isDone, isRest, onTap, onHold }) {
+  const holdTimer = useRef(null);
+  const didHold   = useRef(false);
+  const start = () => { didHold.current=false; holdTimer.current=setTimeout(()=>{ didHold.current=true; onHold(); },HOLD_MS); };
+  const end   = () => { clearTimeout(holdTimer.current); if(!didHold.current&&!isRest) onTap(); };
+  const cancel= () => { clearTimeout(holdTimer.current); didHold.current=true; };
+  const bg     = isRest?"transparent":isDone?(type==="quality"?phase.color:"#4ade80"):(type==="quality"?phase.color+"33":"#2a2a2a");
+  const border = isRest?"#222":isDone?(type==="quality"?phase.color:"#4ade80aa"):(type==="quality"?phase.color+"77":"#444");
   return (
     <div title={label}
       onMouseDown={start} onMouseUp={end} onMouseLeave={cancel}
       onTouchStart={e=>{e.preventDefault();start();}} onTouchEnd={e=>{e.preventDefault();end();}}
       style={{
-        width:13, height:13,
-        borderRadius: type==="quality" ? 2 : "50%",
-        background: bg, border:`1px solid ${border}`,
-        cursor: isRest ? "default" : "pointer",
-        flexShrink:0, transition:"background 0.15s, border 0.15s",
+        width:13, height:13, borderRadius:type==="quality"?2:"50%",
+        background:bg, border:`1px solid ${border}`,
+        cursor:isRest?"default":"pointer", flexShrink:0,
+        transition:"background 0.15s, border 0.15s",
         userSelect:"none", WebkitUserSelect:"none",
-        ...extraStyle,
       }}
     />
   );
 }
 
-// ── TRACKER ───────────────────────────────────────────────────────────────
 function Tracker({ token, gistId, initialData }) {
   const [completed,  setCompleted]  = useState(initialData.completed  || {});
   const [actuals,    setActuals]    = useState(initialData.actuals     || {});
   const [mileTimes,  setMileTimes]  = useState(initialData.mileTimes  || { pm0:"", pm1:"", pm2:"", test:"" });
   const [expanded,   setExpanded]   = useState(null);
   const [saveStatus, setSaveStatus] = useState(null);
-  const [editState,  setEditState]  = useState(null); // { key, label, plannedMi }
+  const [editState,  setEditState]  = useState(null);
   const saveTimer = useRef(null);
 
-  const persist = useCallback((comp, acts, times) => {
+  const persist = useCallback((comp,acts,times)=>{
     clearTimeout(saveTimer.current);
     setSaveStatus("saving");
-    saveTimer.current = setTimeout(async () => {
+    saveTimer.current = setTimeout(async()=>{
       try {
-        await gistSave(token, gistId, { completed:comp, actuals:acts, mileTimes:times });
+        await gistSave(token, gistId, {completed:comp, actuals:acts, mileTimes:times});
         setSaveStatus("saved");
-        setTimeout(()=>setSaveStatus(null), 1500);
+        setTimeout(()=>setSaveStatus(null),1500);
       } catch { setSaveStatus("error"); }
-    }, 600);
-  }, [token, gistId]);
+    },600);
+  },[token,gistId]);
 
   const tapDot = key => {
-    // If not checked, check it with planned mileage (no actual stored = use planned)
-    setCompleted(prev => {
-      const next = { ...prev, [key]: !prev[key] };
-      persist(next, actuals, mileTimes);
-      return next;
-    });
+    setCompleted(prev=>{ const next={...prev,[key]:!prev[key]}; persist(next,actuals,mileTimes); return next; });
   };
-
-  const holdDot = (key, label, plannedMi) => {
-    if (completed[key]) {
-      // Already checked — open edit popup
-      setEditState({ key, label, plannedMi });
-    } else {
-      // Not checked — check it and open popup to optionally set actual
-      setCompleted(prev => ({ ...prev, [key]: true }));
-      setEditState({ key, label, plannedMi });
-    }
+  const holdDot = (key,label,plannedMi) => {
+    if (!completed[key]) setCompleted(prev=>({...prev,[key]:true}));
+    setEditState({key,label,plannedMi});
   };
-
-  const confirmEdit = (mi) => {
-    const key = editState.key;
-    const newActuals = { ...actuals, [key]: mi };
+  const confirmEdit = mi => {
+    const newActuals={...actuals,[editState.key]:mi};
     setActuals(newActuals);
-    persist(completed, newActuals, mileTimes);
+    persist(completed,newActuals,mileTimes);
     setEditState(null);
   };
-
   const uncheckFromEdit = () => {
-    const key = editState.key;
-    const newCompleted = { ...completed, [key]: false };
-    const newActuals   = { ...actuals };
-    delete newActuals[key];
-    setCompleted(newCompleted);
-    setActuals(newActuals);
-    persist(newCompleted, newActuals, mileTimes);
+    const key=editState.key;
+    const newCompleted={...completed,[key]:false};
+    const newActuals={...actuals}; delete newActuals[key];
+    setCompleted(newCompleted); setActuals(newActuals);
+    persist(newCompleted,newActuals,mileTimes);
     setEditState(null);
   };
-
-  const updateTime = (key, val) => {
-    setMileTimes(prev => {
-      const next = { ...prev, [key]: val };
-      persist(completed, actuals, next);
-      return next;
-    });
+  const updateTime = (key,val) => {
+    setMileTimes(prev=>{ const next={...prev,[key]:val}; persist(completed,actuals,next); return next; });
   };
 
-  // Practice mile deltas
   const parseMileTime = str => {
-    if (!str) return null;
-    const parts = str.split(":");
-    if (parts.length === 2) return parseInt(parts[0])*60 + parseFloat(parts[1]);
+    if(!str) return null;
+    const parts=str.split(":");
+    if(parts.length===2) return parseInt(parts[0])*60+parseFloat(parts[1]);
     return parseFloat(str);
   };
-  const mileDeltas = (() => {
-    const t0 = parseMileTime(mileTimes.pm0);
-    const t1 = parseMileTime(mileTimes.pm1);
-    const t2 = parseMileTime(mileTimes.pm2);
+  const mileDeltas = (()=>{
+    const t0=parseMileTime(mileTimes.pm0),t1=parseMileTime(mileTimes.pm1),
+          t2=parseMileTime(mileTimes.pm2),tt=parseMileTime(mileTimes.test);
     return {
-      d01: t0 && t1 ? Math.round(t0-t1) : null,
-      d12: t1 && t2 ? Math.round(t1-t2) : null,
-      d2t: t2 && parseMileTime(mileTimes.test) ? Math.round(t2-parseMileTime(mileTimes.test)) : null,
+      d01:t0&&t1?Math.round(t0-t1):null,
+      d12:t1&&t2?Math.round(t1-t2):null,
+      d2t:t2&&tt?Math.round(t2-tt):null,
     };
   })();
 
-  const { total, done } = weekData.reduce((acc,w) => {
-    w.days.forEach((d,i) => {
-      if (d.type!=="rest") { acc.total++; if(completed[`${w.week}-${i}-am`]) acc.done++; }
-      if (d.pm)            { acc.total++; if(completed[`${w.week}-${i}-pm`]) acc.done++; }
+  const {total,done} = weekData.reduce((acc,w)=>{
+    w.days.forEach((d,i)=>{
+      if(d.type!=="rest"){acc.total++;if(completed[`${w.week}-${i}-am`])acc.done++;}
+      if(d.pm){acc.total++;if(completed[`${w.week}-${i}-pm`])acc.done++;}
     });
     return acc;
-  }, { total:0, done:0 });
+  },{total:0,done:0});
   const pct = Math.round((done/total)*100);
 
-  const currentWeek = (() => {
-    for (const w of weekData) {
-      const allDone = w.days.every((d,i) =>
-        (d.type==="rest" || completed[`${w.week}-${i}-am`]) && (!d.pm || completed[`${w.week}-${i}-pm`])
-      );
-      if (!allDone) return w.week;
+  const currentWeek = (()=>{
+    for(const w of weekData){
+      const allDone=w.days.every((d,i)=>(d.type==="rest"||completed[`${w.week}-${i}-am`])&&(!d.pm||completed[`${w.week}-${i}-pm`]));
+      if(!allDone) return w.week;
     }
     return 13;
   })();
 
-  // Days until test
-  const testDate   = new Date("2026-06-29");
+  const testDate   = new Date("2026-06-26");
   const today      = new Date();
-  const daysToTest = Math.max(0, Math.ceil((testDate - today) / 86400000));
+  const daysToTest = Math.max(0, Math.ceil((testDate-today)/86400000));
 
-  const phaseProgress = phases.map(p => {
+  const phaseProgress = phases.map(p=>{
     let t=0,d=0;
     weekData.filter(w=>p.weeks.includes(w.week)).forEach(w=>{
       w.days.forEach((day,i)=>{
@@ -591,33 +495,20 @@ function Tracker({ token, gistId, initialData }) {
         if(day.pm){t++;if(completed[`${w.week}-${i}-pm`])d++;}
       });
     });
-    return { ...p, pct:t?Math.round((d/t)*100):0 };
+    return {...p, pct:t?Math.round((d/t)*100):0};
   });
 
-  const amBg = (phase,type,isDone) => {
-    if(type==="rest") return "transparent";
-    if(isDone) return type==="quality" ? phase.color : "#4ade80";
-    return type==="quality" ? phase.color+"33" : "#2a2a2a";
-  };
-  const amBorder = (phase,type,isDone) => {
-    if(type==="rest") return "#222";
-    if(isDone) return type==="quality" ? phase.color : "#4ade80aa";
-    return type==="quality" ? phase.color+"77" : "#444";
-  };
+  const amBg     = (ph,tp,dn)=>tp==="rest"?"transparent":dn?(tp==="quality"?ph.color:"#4ade80"):(tp==="quality"?ph.color+"33":"#2a2a2a");
+  const amBorder = (ph,tp,dn)=>tp==="rest"?"#222":dn?(tp==="quality"?ph.color:"#4ade80aa"):(tp==="quality"?ph.color+"77":"#444");
 
   return (
     <div style={{ minHeight:"100vh", background:"#0a0a0a", padding:"24px 16px", maxWidth:700, margin:"0 auto" }}>
 
-      {/* Edit popup */}
       {editState && (
         <EditPopup
-          sessionKey={editState.key}
-          sessionLabel={editState.label}
-          plannedMi={editState.plannedMi}
+          sessionLabel={editState.label} plannedMi={editState.plannedMi}
           currentActual={actuals[editState.key]}
-          onConfirm={confirmEdit}
-          onUncheck={uncheckFromEdit}
-          onCancel={()=>setEditState(null)}
+          onConfirm={confirmEdit} onUncheck={uncheckFromEdit} onCancel={()=>setEditState(null)}
         />
       )}
 
@@ -625,7 +516,7 @@ function Tracker({ token, gistId, initialData }) {
       <div style={{ marginBottom:24 }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
           <div>
-            <div style={{ fontSize:11, letterSpacing:4, color:"#888", marginBottom:6 }}>APR 1 → JUN 29, 2026</div>
+            <div style={{ fontSize:11, letterSpacing:4, color:"#888", marginBottom:6 }}>MAR 30 → JUN 26, 2026</div>
             <div style={{ fontSize:32, fontWeight:900, letterSpacing:-1, lineHeight:1 }}>
               SUB-5:00<span style={{color:"#4ade80"}}>.</span>
             </div>
@@ -639,7 +530,7 @@ function Tracker({ token, gistId, initialData }) {
             <div style={{ display:"flex", gap:8, alignItems:"center" }}>
               {saveStatus && (
                 <div className="save-badge" style={{
-                  color:      saveStatus==="error"?"#f87171":saveStatus==="saving"?"#888":"#4ade80",
+                  color:     saveStatus==="error"?"#f87171":saveStatus==="saving"?"#888":"#4ade80",
                   border:`1px solid ${saveStatus==="error"?"#f8717155":saveStatus==="saving"?"#444":"#4ade8055"}`,
                 }}>
                   {saveStatus==="saving"?"SAVING…":saveStatus==="saved"?"SAVED ✓":"SAVE ERROR"}
@@ -653,7 +544,6 @@ function Tracker({ token, gistId, initialData }) {
           </div>
         </div>
 
-        {/* Overall bar */}
         <div style={{ marginTop:22 }}>
           <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6, fontSize:11, color:"#aaa" }}>
             <span>{done} / {total} sessions</span>
@@ -664,7 +554,6 @@ function Tracker({ token, gistId, initialData }) {
           </div>
         </div>
 
-        {/* Phase bars */}
         <div style={{ display:"flex", gap:8, marginTop:12 }}>
           {phaseProgress.map(p=>(
             <div key={p.name} style={{ flex:p.weeks.length, minWidth:0 }}>
@@ -678,7 +567,6 @@ function Tracker({ token, gistId, initialData }) {
         </div>
       </div>
 
-      {/* Volume chart */}
       <VolumeChart completed={completed} actuals={actuals} />
 
       {/* Mile times */}
@@ -686,25 +574,23 @@ function Tracker({ token, gistId, initialData }) {
         <div style={{ fontSize:10, color:"#777", letterSpacing:3, marginBottom:12 }}>PRACTICE MILE LOG</div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr 1fr", gap:8 }}>
           {[
-            {key:"pm0", label:"WK 7",  target:"5:20–5:40", delta:null},
-            {key:"pm1", label:"WK 9",  target:"5:10–5:20", delta:mileDeltas.d01},
-            {key:"pm2", label:"WK 11", target:"5:00–5:10", delta:mileDeltas.d12},
-            {key:"test",label:"TEST",  target:"sub-5:00",  delta:mileDeltas.d2t},
+            {key:"pm0", label:"WK 7 · May 16",  target:"5:20–5:40", delta:null},
+            {key:"pm1", label:"WK 9 · May 30",  target:"5:10–5:20", delta:mileDeltas.d01},
+            {key:"pm2", label:"WK 11 · Jun 13", target:"5:00–5:10", delta:mileDeltas.d12},
+            {key:"test",label:"TEST · Jun 26",  target:"sub-5:00",  delta:mileDeltas.d2t},
           ].map(m=>(
             <div key={m.key} style={{ textAlign:"center" }}>
               <div style={{ fontSize:9, color:"#888", letterSpacing:1, marginBottom:5 }}>{m.label}</div>
               <input value={mileTimes[m.key]} onChange={e=>updateTime(m.key,e.target.value)}
                 placeholder={m.target}
                 style={{
-                  width:"100%", background: mileTimes[m.key]?"#0d1f0d":"#0d0d0d",
+                  width:"100%", background:mileTimes[m.key]?"#0d1f0d":"#0d0d0d",
                   border:`1px solid ${mileTimes[m.key]?"#4ade8066":"#2a2a2a"}`,
-                  borderRadius:4, color: mileTimes[m.key]?"#4ade80":"#555",
+                  borderRadius:4, color:mileTimes[m.key]?"#4ade80":"#555",
                   fontSize:11, textAlign:"center", padding:"6px 2px", outline:"none",
                 }} />
-              {m.delta !== null && (
-                <div style={{ fontSize:9, color:"#4ade80", marginTop:4, letterSpacing:1 }}>
-                  −{m.delta}s
-                </div>
+              {m.delta!==null && (
+                <div style={{ fontSize:9, color:"#4ade80", marginTop:4, letterSpacing:1 }}>−{m.delta}s</div>
               )}
             </div>
           ))}
@@ -713,8 +599,7 @@ function Tracker({ token, gistId, initialData }) {
 
       {/* Legend */}
       <div style={{ display:"flex", gap:16, marginBottom:14, fontSize:10, color:"#777", letterSpacing:1, flexWrap:"wrap" }}>
-        <span>● EASY</span>
-        <span>■ QUALITY</span>
+        <span>● EASY</span><span>■ QUALITY</span>
         <span style={{color:"#60a5faaa"}}>◆ STRENGTH</span>
         <span style={{color:"#555", marginLeft:"auto"}}>HOLD TO EDIT / UNCHECK</span>
       </div>
@@ -722,7 +607,7 @@ function Tracker({ token, gistId, initialData }) {
       {/* Weeks */}
       <div style={{ display:"flex", flexDirection:"column", gap:4 }}>
         {weekData.map(w=>{
-          const phase = phases[getPhaseIdx(w.week)];
+          const phase=phases[getPhaseIdx(w.week)];
           let wt=0,wd=0;
           w.days.forEach((d,i)=>{
             if(d.type!=="rest"){wt++;if(completed[`${w.week}-${i}-am`])wd++;}
@@ -737,71 +622,62 @@ function Tracker({ token, gistId, initialData }) {
               border:`1px solid ${isCurrent?phase.color+"66":isComplete?"#1f3f1f":"#1f1f1f"}`,
               borderRadius:6, overflow:"hidden", background:isCurrent?"#0f0f0f":"transparent",
             }}>
-              {/* Row */}
               <div style={{ display:"flex", alignItems:"center", gap:10, padding:"9px 14px", cursor:"pointer" }}
                 onClick={()=>setExpanded(isExp?null:w.week)}>
                 <div style={{ fontSize:11, fontWeight:700, color:isCurrent?phase.color:"#aaa", letterSpacing:1, minWidth:44 }}>
                   WK {w.week}
                 </div>
                 <div style={{ fontSize:10, color:"#777", minWidth:40 }}>{w.miles} mi</div>
-
-                <div style={{ display:"flex", gap:5, flex:1 }}>
+                <div style={{ fontSize:9, color:"#555", flex:1 }}>{w.dates}</div>
+                <div style={{ display:"flex", gap:5 }}>
                   {w.days.map((d,i)=>{
                     const amKey  = `${w.week}-${i}-am`;
                     const pmKey  = `${w.week}-${i}-pm`;
                     const amDone = completed[amKey];
                     const pmDone = completed[pmKey];
                     const isRest = d.type==="rest";
-                    const hasActual = actuals[amKey] !== undefined;
+                    const hasActual = actuals[amKey]!==undefined;
                     return (
                       <div key={i} style={{ display:"flex", flexDirection:"column", gap:3, alignItems:"center" }}>
                         <div style={{ position:"relative" }}>
                           <HoldDot
-                            sessionKey={amKey} label={`${DAY_LABELS[i]} AM: ${d.am}`}
+                            label={`${DAY_LABELS[i]} AM: ${d.am}`}
                             type={d.type} phase={phase} isDone={amDone} isRest={isRest}
                             onTap={()=>tapDot(amKey)}
-                            onHold={()=>holdDot(amKey, `${DAY_LABELS[i]} — ${d.am}`, d.plannedMi)}
+                            onHold={()=>holdDot(amKey,`${DAY_LABELS[i]} — ${d.am}`,d.plannedMi)}
                           />
-                          {/* Small dot indicator if actual differs from planned */}
-                          {amDone && hasActual && actuals[amKey] !== d.plannedMi && (
-                            <div style={{
-                              position:"absolute", top:-2, right:-2,
-                              width:4, height:4, borderRadius:"50%",
-                              background:"#fb923c", border:"1px solid #0a0a0a",
-                            }} />
+                          {amDone&&hasActual&&actuals[amKey]!==d.plannedMi&&(
+                            <div style={{ position:"absolute", top:-2, right:-2, width:4, height:4, borderRadius:"50%", background:"#fb923c", border:"1px solid #0a0a0a" }} />
                           )}
                         </div>
-                        {d.pm ? (
+                        {d.pm?(
                           <div
-                            onMouseDown={e=>{e.stopPropagation(); tapDot(pmKey);}}
+                            onMouseDown={e=>{e.stopPropagation();tapDot(pmKey);}}
                             onTouchEnd={e=>{e.preventDefault();e.stopPropagation();tapDot(pmKey);}}
                             title={`${DAY_LABELS[i]} PM: ${d.pm}`}
                             style={{
                               width:11, height:11, borderRadius:1, transform:"rotate(45deg)",
-                              background: pmDone?"#60a5fa":"#60a5fa33",
+                              background:pmDone?"#60a5fa":"#60a5fa33",
                               border:`1px solid ${pmDone?"#60a5fa":"#60a5fa66"}`,
-                              cursor:"pointer", flexShrink:0, transition:"all 0.15s",
-                              userSelect:"none",
+                              cursor:"pointer", flexShrink:0, transition:"all 0.15s", userSelect:"none",
                             }}
                           />
-                        ) : <div style={{width:11,height:11}} />}
+                        ):<div style={{width:11,height:11}}/>}
                       </div>
                     );
                   })}
                 </div>
-
                 <div style={{ fontSize:10, color:isComplete?"#4ade80":"#777", minWidth:28, textAlign:"right" }}>
                   {wd}/{wt}
                 </div>
-                {w.milestone && (
+                {w.milestone&&(
                   <div style={{ fontSize:10, color:phase.color, whiteSpace:"nowrap", fontWeight:600 }}>
                     {w.milestone}
                   </div>
                 )}
               </div>
 
-              {/* Expanded */}
-              {isExp && (
+              {isExp&&(
                 <div style={{ padding:"0 14px 14px", borderTop:"1px solid #1f1f1f", paddingTop:12 }}>
                   <div style={{ fontSize:10, color:"#888", marginBottom:12, lineHeight:1.6 }}>
                     {w.dates} &nbsp;·&nbsp; {w.notes}
@@ -818,29 +694,27 @@ function Tracker({ token, gistId, initialData }) {
                         <div key={i} style={{ textAlign:"center" }}>
                           <div style={{ fontSize:8, color:"#666", letterSpacing:1, marginBottom:5 }}>{DAY_LABELS[i]}</div>
                           <div
-                            onMouseDown={!isRest ? (e)=>{
+                            onMouseDown={!isRest?(e)=>{
                               e.stopPropagation();
-                              const timer = setTimeout(()=>{ holdDot(amKey,`${DAY_LABELS[i]} — ${d.am}`,d.plannedMi); }, HOLD_MS);
-                              const cleanup = ()=>{ clearTimeout(timer); document.removeEventListener("mouseup",cleanup); };
-                              document.addEventListener("mouseup", cleanup);
-                              // single click handled separately
-                            } : undefined}
-                            onClick={!isRest ? ()=>tapDot(amKey) : undefined}
+                              const timer=setTimeout(()=>holdDot(amKey,`${DAY_LABELS[i]} — ${d.am}`,d.plannedMi),HOLD_MS);
+                              const cleanup=()=>{clearTimeout(timer);document.removeEventListener("mouseup",cleanup);};
+                              document.addEventListener("mouseup",cleanup);
+                            }:undefined}
+                            onClick={!isRest?()=>tapDot(amKey):undefined}
                             style={{
                               padding:"6px 4px", marginBottom:d.pm?4:0,
-                              background: isRest?"transparent":amDone?(d.type==="quality"?phase.color+"28":"#0d200d"):"#141414",
+                              background:isRest?"transparent":amDone?(d.type==="quality"?phase.color+"28":"#0d200d"):"#141414",
                               border:`1px solid ${isRest?"#1a1a1a":amDone?(d.type==="quality"?phase.color+"88":"#4ade8066"):"#282828"}`,
-                              borderRadius:4, cursor:isRest?"default":"pointer", opacity:isRest?0.25:1,
-                              userSelect:"none",
+                              borderRadius:4, cursor:isRest?"default":"pointer", opacity:isRest?0.25:1, userSelect:"none",
                             }}>
                             <div style={{ fontSize:8, color:d.type==="quality"?phase.color:"#bbb", lineHeight:1.5 }}>{d.am}</div>
-                            {!isRest && amDone && (
-                              <div style={{ fontSize:9, color: actualMi!==undefined&&actualMi!==d.plannedMi?"#fb923c":"#4ade80", marginTop:3 }}>
-                                {actualMi!==undefined ? `${actualMi%1===0?actualMi:actualMi.toFixed(1)} mi` : "✓"}
+                            {!isRest&&amDone&&(
+                              <div style={{ fontSize:9, color:actualMi!==undefined&&actualMi!==d.plannedMi?"#fb923c":"#4ade80", marginTop:3 }}>
+                                {actualMi!==undefined?`${actualMi%1===0?actualMi:actualMi.toFixed(1)} mi`:"✓"}
                               </div>
                             )}
                           </div>
-                          {d.pm && (
+                          {d.pm&&(
                             <div onClick={()=>tapDot(pmKey)}
                               style={{
                                 padding:"6px 4px",
@@ -849,7 +723,7 @@ function Tracker({ token, gistId, initialData }) {
                                 borderRadius:4, cursor:"pointer", userSelect:"none",
                               }}>
                               <div style={{ fontSize:8, color:"#60a5fa", lineHeight:1.5 }}>{d.pm}</div>
-                              {pmDone && <div style={{ fontSize:9, color:"#60a5fa", marginTop:3 }}>✓</div>}
+                              {pmDone&&<div style={{ fontSize:9, color:"#60a5fa", marginTop:3 }}>✓</div>}
                             </div>
                           )}
                         </div>
@@ -870,41 +744,30 @@ function Tracker({ token, gistId, initialData }) {
   );
 }
 
-// ── ROOT ──────────────────────────────────────────────────────────────────
 function App() {
   const [creds,   setCreds]   = useState(()=>{
-    const token  = localStorage.getItem("mt_token");
-    const gistId = localStorage.getItem("mt_gist");
+    const token=localStorage.getItem("mt_token"),gistId=localStorage.getItem("mt_gist");
     return (token&&gistId)?{token,gistId}:null;
   });
   const [data,    setData]    = useState(null);
   const [loading, setLoading] = useState(!!creds);
   const [error,   setError]   = useState("");
-
   useEffect(()=>{
-    if (!creds) return;
-    gistLoad(creds.token, creds.gistId)
+    if(!creds) return;
+    gistLoad(creds.token,creds.gistId)
       .then(d=>setData(d||{completed:{},actuals:{},mileTimes:{pm0:"",pm1:"",pm2:"",test:""}}))
       .catch(()=>setError("Could not load data."))
       .finally(()=>setLoading(false));
   },[]);
-
-  if (!creds) return <SetupScreen onConnect={(token,gistId,d)=>{setCreds({token,gistId});setData(d);}} />;
-  if (loading) return (
-    <div style={{ minHeight:"100vh", background:"#0a0a0a", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Courier New',monospace", color:"#777", fontSize:12, letterSpacing:4 }}>
-      LOADING…
-    </div>
-  );
-  if (error) return (
+  if(!creds) return <SetupScreen onConnect={(token,gistId,d)=>{setCreds({token,gistId});setData(d);}} />;
+  if(loading) return <div style={{ minHeight:"100vh", background:"#0a0a0a", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Courier New',monospace", color:"#777", fontSize:12, letterSpacing:4 }}>LOADING…</div>;
+  if(error)   return (
     <div style={{ minHeight:"100vh", background:"#0a0a0a", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:16, fontFamily:"'Courier New',monospace" }}>
       <div style={{color:"#f87171",fontSize:12,letterSpacing:2}}>{error}</div>
-      <button onClick={()=>{localStorage.clear();window.location.reload();}}
-        style={{color:"#777",background:"transparent",border:"1px solid #333",borderRadius:3,padding:"8px 16px",cursor:"pointer",fontSize:10,letterSpacing:2}}>
-        RECONNECT
-      </button>
+      <button onClick={()=>{localStorage.clear();window.location.reload();}} style={{color:"#777",background:"transparent",border:"1px solid #333",borderRadius:3,padding:"8px 16px",cursor:"pointer",fontSize:10,letterSpacing:2}}>RECONNECT</button>
     </div>
   );
-  if (data) return <Tracker token={creds.token} gistId={creds.gistId} initialData={data} />;
+  if(data) return <Tracker token={creds.token} gistId={creds.gistId} initialData={data} />;
   return null;
 }
 
